@@ -1,2 +1,3 @@
 # FailCodeTriage_ML
-Takes an a CSV file with features and end result, create a NN model of probably outcome
+Takes a CSV file with features and end result, create a NN model of probably outcome
+NN = Neural Network

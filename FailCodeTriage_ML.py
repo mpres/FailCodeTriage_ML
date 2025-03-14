@@ -20,7 +20,7 @@ class ScreeningDataset(Dataset):
     def __getitem__(self, idx):
         return self.features[idx], self.labels[idx]
 
-# Create Neural Network Model that will make the failcode Prediction
+# Create Neural Network Model that will make the failcode Prediction 3/13/25,
 class FailCodeClassifier(nn.Module):
     def __init__(self, input_size, hidden_size=64):
         super(FailCodeClassifier, self).__init__()
@@ -34,6 +34,25 @@ class FailCodeClassifier(nn.Module):
             nn.Linear(hidden_size, 10),
             nn.Softmax(dim=1)
         )
-    
+
     def forward(self, x):
         return self.layers(x)
+
+def prep_data(csv_path):
+    # Load and preprocess data
+    data = pd.read_csv(csv_path)
+    
+    # Assuming the last column is the target variable
+    X = data.iloc[:, :-1].values
+    y = data.iloc[:, -1].values
+    
+    # Scale features
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+    
+    

@@ -55,4 +55,12 @@ def prep_data(csv_path):
         X, y, test_size=0.2, random_state=42
     )
     
+# Create data loaders
+    train_dataset = ScreeningDataset(X_train, y_train)
+    test_dataset = ScreeningDataset(X_test, y_test)
+    
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+    
+    return train_loader, test_loader, X_train.shape[1]
     

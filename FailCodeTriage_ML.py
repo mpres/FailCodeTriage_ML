@@ -63,4 +63,24 @@ def prep_data(csv_path):
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
     
     return train_loader, test_loader, X_train.shape[1]
+  
+def train_model(model, train_loader, num_epochs=10):
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters())
+    
+    for epoch in range(num_epochs):
+        model.train()
+        total_loss = 0
+        
+        for features, labels in train_loader:
+            optimizer.zero_grad()
+            outputs = model(features)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            
+            total_loss += loss.item()
+        
+        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_loader):.4f}')
+
     

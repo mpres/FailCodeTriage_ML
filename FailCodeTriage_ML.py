@@ -41,46 +41,59 @@ class FailCodeClassifier(nn.Module):
 def prep_data(csv_path):
     # Load and preprocess data
     data = pd.read_csv(csv_path)
-    
+
     # Assuming the last column is the target variable
     X = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
-    
+
     # Scale features
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
-    
+
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
-    
+
 # Create data loaders
     train_dataset = ScreeningDataset(X_train, y_train)
     test_dataset = ScreeningDataset(X_test, y_test)
-    
+
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-    
+
     return train_loader, test_loader, X_train.shape[1]
-  
+
 def train_model(model, train_loader, num_epochs=10):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters())
-    
+
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
-        
+
         for features, labels in train_loader:
             optimizer.zero_grad()
             outputs = model(features)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
-            
+
             total_loss += loss.item()
-        
+
         print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_loader):.4f}')
 
+def evaluate_model(model, test_loader):
+    model.eval()
+    correct = 0
+    total = 0
     
+    with torch.no_grad():
+        for features, labels in test_loader:
+            outputs = model(features)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    
+    accuracy = 100 * correct / total
+    print(f'Test Accuracy: {accuracy:.2f}%')

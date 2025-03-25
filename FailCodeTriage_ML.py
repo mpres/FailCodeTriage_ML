@@ -110,7 +110,7 @@ def main():
     csv_path = "your_data.csv"  # Replace with your CSV file path
     
     # Prepare data
-    train_loader, test_loader, input_size = prepare_data(csv_path)
+    train_loader, test_loader, input_size = prep_data(csv_path)
     
     # Initialize and train model
     model = FailCodeClassifier(input_size)

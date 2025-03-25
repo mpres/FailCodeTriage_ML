@@ -104,3 +104,25 @@ def predict_probabilities(model, features):
         features = torch.FloatTensor(features)
         outputs = model(features)
         return outputs.numpy()
+
+def main():
+    # Example usage
+    csv_path = "your_data.csv"  # Replace with your CSV file path
+    
+    # Prepare data
+    train_loader, test_loader, input_size = prepare_data(csv_path)
+    
+    # Initialize and train model
+    model = MultiClassifier(input_size)
+    train_model(model, train_loader)
+    
+    # Evaluate model
+    evaluate_model(model, test_loader)
+    
+    # Example of getting probabilities for new data
+    new_data = torch.randn(1, input_size)  # Replace with your actual new data
+    probabilities = predict_probabilities(model, new_data)
+    print("Predicted probabilities for each class:", probabilities)
+
+if __name__ == "__main__":
+    main()

@@ -113,7 +113,7 @@ def main():
     train_loader, test_loader, input_size = prepare_data(csv_path)
     
     # Initialize and train model
-    model = MultiClassifier(input_size)
+    model = FailCodeClassifier(input_size)
     train_model(model, train_loader)
     
     # Evaluate model

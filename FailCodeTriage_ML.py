@@ -107,11 +107,15 @@ def evaluate_model(model, test_loader):
 
 #MPresley added 03/31/25,
 def label_encode_and_convert(array):
+    assert(array.ndim < 3)
     encoder = LabelEncoder()
     result = np.zeros(array.shape, dtype=np.float32)
 
-    for col in range(array.shape[1]):
-        result[:, col] = encoder.fit_transform(array[:, col]).astype(np.float32)
+    if array.ndim == 1:
+      result = encoder.fit_transform(array)
+    else:
+      for col in range(array.shape[1]):
+          result[:, col] = encoder.fit_transform(array[:, col]).astype(np.float32)
 
     return result
 

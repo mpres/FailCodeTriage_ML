@@ -3,9 +3,16 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import pandas as pd
+import numpy as np
+import sys
+import os
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from torch.utils.data import Dataset, DataLoader
+
+
+
 
 # Screening Dataset class for handling
 #Mpresley 3/12/25
@@ -98,6 +105,16 @@ def evaluate_model(model, test_loader):
     accuracy = 100 * correct / total
     print(f'Test Accuracy: {accuracy:.2f}%')
 
+#MPresley added 03/31/25,
+def label_encode_and_convert(array):
+    encoder = LabelEncoder()
+    result = np.zeros(array.shape, dtype=np.float32)
+
+    for col in range(array.shape[1]):
+        result[:, col] = encoder.fit_transform(array[:, col]).astype(np.float32)
+
+    return result
+
 def predict_probabilities(model, features):
     model.eval()
     with torch.no_grad():
@@ -108,17 +125,17 @@ def predict_probabilities(model, features):
 def main():
     # Example usage
     csv_path = "your_data.csv"  # Replace with your CSV file path
-    
+
     # Prepare data
     train_loader, test_loader, input_size = prep_data(csv_path)
-    
+
     # Initialize and train model
     model = FailCodeClassifier(input_size)
     train_model(model, train_loader)
-    
+
     # Evaluate model
     evaluate_model(model, test_loader)
-    
+
     # Example of getting probabilities for new data
     new_data = torch.randn(1, input_size)  # Replace with your actual new data
     probabilities = predict_probabilities(model, new_data)

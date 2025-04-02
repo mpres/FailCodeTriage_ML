@@ -54,15 +54,24 @@ def prep_data(csv_path):
     y = data.iloc[:, -1].values
 
     # Scale features
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X)
+    #Mpresley 4/2/25, take away scaling (using catgorical data)
+    #scaler = StandardScaler()
+    #X = scaler.fit_transform(X)
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-# Create data loaders
+    #Mpresley 4/2/25 Encode data 
+    X_test =  label_encode_and_convert(X_test)
+    y_test =  label_encode_and_convert(y_test)
+
+    X_train =  label_encode_and_convert(X_train)
+    y_train =  label_encode_and_convert(y_train)
+
+
+    # Create data loaders
     train_dataset = ScreeningDataset(X_train, y_train)
     test_dataset = ScreeningDataset(X_test, y_test)
 

@@ -12,8 +12,6 @@ from sklearn.preprocessing import StandardScaler
 from torch.utils.data import Dataset, DataLoader
 
 
-
-
 # Screening Dataset class for handling
 #Mpresley 3/12/25
 class ScreeningDataset(Dataset):
@@ -63,7 +61,7 @@ def prep_data(csv_path):
         X, y, test_size=0.2, random_state=42
     )
 
-    #Mpresley 4/2/25 Encode data 
+    #Mpresley 4/2/25 Encode data
     X_test =  label_encode_and_convert(X_test)
     y_test =  label_encode_and_convert(y_test)
 
@@ -87,22 +85,32 @@ def train_model(model, train_loader, num_epochs=10):
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
+        total = 0
+        correct = 0
 
         for features, labels in train_loader:
             optimizer.zero_grad()
             outputs = model(features)
+            total += labels.size(0)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
 
             total_loss += loss.item()
 
-        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_loader):.4f}')
+        accuracy = 100 * correct / total
+        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_loader):.4f}, Train Accuracy: {accuracy:.2f}')
 
 def evaluate_model(model, test_loader):
+    criterion = nn.CrossEntropyLoss()
     model.eval()
     correct = 0
     total = 0
+    total_loss = 0
 
     with torch.no_grad():
         for features, labels in test_loader:
@@ -111,8 +119,13 @@ def evaluate_model(model, test_loader):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+            loss = criterion(outputs, labels)
+            total_loss += loss.item()
+
+
     accuracy = 100 * correct / total
-    print(f'Test Accuracy: {accuracy:.2f}%')
+    test_loss = total_loss/len(test_loader)
+    print(f'Test Accuracy: {accuracy:.2f}%, Test Loss: {test_loss:.4f}%')
 
 #MPresley added 03/31/25,
 def label_encode_and_convert(array):

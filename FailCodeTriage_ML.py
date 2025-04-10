@@ -103,7 +103,7 @@ def train_model(model, train_loader, num_epochs=10):
             total_loss += loss.item()
 
         accuracy = 100 * correct / total
-        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_loader):.4f}, Train Accuracy: {accuracy:.2f}')
+        print(f'Loss: {total_loss/len(train_loader):.4f}, Train Accuracy: {accuracy:.2f}')
 
 def evaluate_model(model, test_loader):
     criterion = nn.CrossEntropyLoss()
@@ -151,6 +151,7 @@ def predict_probabilities(model, features):
 def train_and_eval_model(model, train_loader, test_loader, num_epochs=10):
   num_e = 1
   for i in range(num_epochs):
+    print(f'Epoch: {i}/{num_epochs}')
     train_model(model, train_loader,num_e)
     evaluate_model(model, test_loader)
   return None

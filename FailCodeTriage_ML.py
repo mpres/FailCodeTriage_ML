@@ -148,6 +148,13 @@ def predict_probabilities(model, features):
         outputs = model(features)
         return outputs.numpy()
 
+def train_and_eval_model(model, train_loader, test_loader, num_epochs=10):
+  num_e = 1
+  for i in range(num_epochs):
+    train_model(model, train_loader,num_e)
+    evaluate_model(model, test_loader)
+  return None
+
 def main():
     # Example usage
     csv_path = "your_data.csv"  # Replace with your CSV file path

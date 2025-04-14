@@ -43,16 +43,25 @@ class FailCodeClassifier(nn.Module):
     def forward(self, x):
         return self.layers(x)
 
+
 def prep_data(csv_path):
     # Load and preprocess data
     data = pd.read_csv(csv_path)
+
+    if "CTDI_MultiFailCode" in data.columns:
+      split_data = data['CTDI_MultiFailCode'].str.split(',', expand=True)
+      data = pd.concat([data,split_data],axis=1)
+      data = data.drop('CTDI_MultiFailCode',axis=1)
+    else:
+      print("no")
+
 
     # Assuming the last column is the target variable
     X = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
 
+
     # Scale features
-    #Mpresley 4/2/25, take away scaling (using catgorical data)
     #scaler = StandardScaler()
     #X = scaler.fit_transform(X)
 

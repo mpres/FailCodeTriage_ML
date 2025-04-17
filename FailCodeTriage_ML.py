@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import sys
 import os
+import re
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -164,6 +165,73 @@ def train_and_eval_model(model, train_loader, test_loader, num_epochs=10):
     train_model(model, train_loader,num_e)
     evaluate_model(model, test_loader)
   return None
+
+def convert_text_to_int(text, map_replace = {},text_replace = {}, filter_nums=1):
+  '''
+  Author: Mpresley
+  Date: 4/17/25
+  Purpose: this is used to convert a column in pandas taht is text into a numeric form, 
+           Generally this is only useful when the int value is embedded in the text data or 
+           can be mapped into an int (using a dictionary)
+  Parameters:
+              1. text (this is the raw text value, needs to be a text value)
+              2. map_repalce (this should be a dictionary, if the text value is a key in the map
+              it will be replaced with the value)
+              3. text_place (is also a dictionary, if a pattern is found in the text, it will be replace with
+              the value of this dictionary)
+              4. filter nums is a boolean flag that will filter the numeric values if left on
+  Outline:
+            1. Validate data types of the parameters using asserts
+            2. return map_relace value if found
+            3. do a a text_place .replace function on the text
+            4. filter nums only
+            5. if possible convert remaining value to int
+  Requirements: import re
+  '''
+
+  # Step 1. validate input tpe
+  try:
+    assert type(text) == str
+  except:
+    print(f"the text parameter {text} has to be a string")
+    return 0
+
+  try:
+    assert type(map_replace) == dict
+  except:
+    print (f"the map_replace parameter {map_replace} has to be a dictionary")
+    return 0
+
+  try:
+    assert type(text_replace) == dict
+  except:
+    print(f"the text_replace parameter {text_replace} has to be a dictionary")
+    return 0
+  
+
+  #Step 2 look for map replace
+
+  if text in map_replace:
+    return map_replace[text]
+
+  #Step 3 look for patterns to substitute
+
+  for item in text_replace:
+    text = text.replace(item,text_replace[item])
+
+  # Step 4 filter out numeric values
+
+  if filter_nums == 1:
+    text = re.sub(r"[a-zA-Z]", "", text)
+
+  # Step 5 try to convert to int
+  try:
+    int_val = int(text)
+  except:
+    print(f"The value {text} can not convert into an int")
+    return 0
+
+  return int_val
 
 def main():
     # Example usage

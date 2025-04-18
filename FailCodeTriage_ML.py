@@ -56,6 +56,28 @@ def prep_data(csv_path):
     else:
       print("no")
 
+    #process the time data
+    data['time_col'] = pd.to_datetime(data['ScannedAt_CheckIn']).astype('int64') // 10**9
+    scaler = MinMaxScaler()
+    data['normalized_sklearn_minmax_time'] = scaler.fit_transform(data[['time_col']])
+    data = data.drop(["ScannedAt_CheckIn", "time_col"], axis=1)
+
+    #Process the wom data
+    data['wom_num'] = data['wom_numerous'].apply(lambda x: convert_text_to_int(x, text_replace={"-":""}) )
+    data['wom_num_scaled'] = scaler.fit_transform(data[['wom_num']])
+    data = data.drop(["wom_num","wom_numerous"], axis=1)
+
+    #Process the Model data
+    data['Model_num'] = data['Model'].apply(lambda x: convert_text_to_int(x) )
+    data = data.drop("Model", axis=1)
+
+    #Drop the product field
+    data = data.drop("Product", axis=1)
+
+    #Dummy Data 
+    dummy_cols = ['PartNumber_Service','PartType','CTDI_Slot','RTC__Repair::FailCode_FullScreen', 'x5','FailCode_FullScreen','FailCode_PostScreen']
+    data = pd.get_dummies(data, columns=dummy_cols)
+    
 
     # Assuming the last column is the target variable
     X = data.iloc[:, :-1].values
@@ -85,6 +107,8 @@ def prep_data(csv_path):
 
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+    #scaler = 
 
     return train_loader, test_loader, X_train.shape[1]
 
@@ -170,8 +194,8 @@ def convert_text_to_int(text, map_replace = {},text_replace = {}, filter_nums=1)
   '''
   Author: Mpresley
   Date: 4/17/25
-  Purpose: this is used to convert a column in pandas taht is text into a numeric form, 
-           Generally this is only useful when the int value is embedded in the text data or 
+  Purpose: this is used to convert a column in pandas taht is text into a numeric form,
+           Generally this is only useful when the int value is embedded in the text data or
            can be mapped into an int (using a dictionary)
   Parameters:
               1. text (this is the raw text value, needs to be a text value)
@@ -207,7 +231,7 @@ def convert_text_to_int(text, map_replace = {},text_replace = {}, filter_nums=1)
   except:
     print(f"the text_replace parameter {text_replace} has to be a dictionary")
     return 0
-  
+
 
   #Step 2 look for map replace
 

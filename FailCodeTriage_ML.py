@@ -74,10 +74,10 @@ def prep_data(csv_path):
     #Drop the product field
     data = data.drop("Product", axis=1)
 
-    #Dummy Data 
-    dummy_cols = ['PartNumber_Service','PartType','CTDI_Slot','RTC__Repair::FailCode_FullScreen', 'x5','FailCode_FullScreen','FailCode_PostScreen']
+    #Dummy Data
+    dummy_cols = ['PartNumber_Service','PartType','CTDI_Slot','RTC__Repair::FailCode_FullScreen', 'x5','FailCode_FullScreen','FailCode_PostScreen','CTDI_FailStation','FailCode_Repaired','FailCode_CustomerReport']
     data = pd.get_dummies(data, columns=dummy_cols)
-    
+
 
     # Assuming the last column is the target variable
     X = data.iloc[:, :-1].values
@@ -108,7 +108,7 @@ def prep_data(csv_path):
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
-    #scaler = 
+    #scaler =
 
     return train_loader, test_loader, X_train.shape[1]
 

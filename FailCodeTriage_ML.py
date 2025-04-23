@@ -49,33 +49,33 @@ def prep_data(csv_path):
     # Load and preprocess data
     data = pd.read_csv(csv_path)
 
-    if "CTDI_MultiFailCode" in data.columns:
-      split_data = data['CTDI_MultiFailCode'].str.split(',', expand=True)
+    if "col7" in data.columns:
+      split_data = data['col7'].str.split('~', expand=True)
       data = pd.concat([data,split_data],axis=1)
-      data = data.drop('CTDI_MultiFailCode',axis=1)
+      data = data.drop('col7',axis=1)
     else:
       print("no")
 
     #process the time data
-    data['time_col'] = pd.to_datetime(data['ScannedAt_CheckIn']).astype('int64') // 10**9
+    data['time_col'] = pd.to_datetime(data['col13']).astype('int64') // 10**9
     scaler = MinMaxScaler()
     data['normalized_sklearn_minmax_time'] = scaler.fit_transform(data[['time_col']])
-    data = data.drop(["ScannedAt_CheckIn", "time_col"], axis=1)
+    data = data.drop(["col13", "time_col"], axis=1)
 
     #Process the wom data
-    data['wom_num'] = data['wom_numerous'].apply(lambda x: convert_text_to_int(x, text_replace={"-":""}) )
-    data['wom_num_scaled'] = scaler.fit_transform(data[['wom_num']])
-    data = data.drop(["wom_num","wom_numerous"], axis=1)
+    data['col8_num'] = data['col8'].apply(lambda x: convert_text_to_int(x, text_replace={"-":""}) )
+    data['col8_num_scaled'] = scaler.fit_transform(data[['col8_num']])
+    data = data.drop(["col8","col8_num"], axis=1)
 
     #Process the Model data
-    data['Model_num'] = data['Model'].apply(lambda x: convert_text_to_int(x) )
-    data = data.drop("Model", axis=1)
+    data['col2_num'] = data['col2'].apply(lambda x: convert_text_to_int(x) )
+    data = data.drop("col2", axis=1)
 
     #Drop the product field
-    data = data.drop("Product", axis=1)
+    data = data.drop("col3", axis=1)
 
     #Dummy Data
-    dummy_cols = ['PartNumber_Service','PartType','CTDI_Slot','RTC__Repair::FailCode_FullScreen', 'x5','FailCode_FullScreen','FailCode_PostScreen','CTDI_FailStation','FailCode_Repaired','FailCode_CustomerReport']
+    dummy_cols = ['col1','col4','col6','col10','col15','col11','col14','col5','col11','col12']
     data = pd.get_dummies(data, columns=dummy_cols)
 
 

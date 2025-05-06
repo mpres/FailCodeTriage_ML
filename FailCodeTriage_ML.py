@@ -137,7 +137,7 @@ def train_model(model, train_loader, num_epochs=10):
             total_loss += loss.item()
 
         accuracy = 100 * correct / total
-        print(f'Loss: {total_loss/len(train_loader):.4f}, Train Accuracy: {accuracy:.2f}')
+        print(f'Train Loss: {total_loss/len(train_loader):.4f}, Train Accuracy: {accuracy:.2f}')
 
 def evaluate_model(model, test_loader):
     criterion = nn.CrossEntropyLoss()
@@ -159,7 +159,7 @@ def evaluate_model(model, test_loader):
 
     accuracy = 100 * correct / total
     test_loss = total_loss/len(test_loader)
-    print(f'Test Accuracy: {accuracy:.2f}%, Test Loss: {test_loss:.4f}%')
+    print(f'Test Loss: {test_loss:.4f}%, Test Accuracy: {accuracy:.2f}%')
 
 #MPresley added 03/31/25,
 def label_encode_and_convert(array):

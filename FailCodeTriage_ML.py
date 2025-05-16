@@ -54,7 +54,7 @@ def prep_data(csv_path):
       data = pd.concat([data,split_data],axis=1)
       data = data.drop('col7',axis=1)
     else:
-      print("no")
+      print("no col7")
 
     #process the time data
     data['time_col'] = pd.to_datetime(data['col13']).astype('int64') // 10**9
@@ -276,5 +276,5 @@ def main():
     probabilities = predict_probabilities(model, new_data)
     print("Predicted probabilities for each class:", probabilities)
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()

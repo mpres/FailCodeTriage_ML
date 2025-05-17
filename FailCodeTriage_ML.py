@@ -78,8 +78,11 @@ def prep_data(csv_path):
     data = data.drop("col3", axis=1)
 
     #Dummy Data
-    dummy_cols = ['col1','col4','col6','col10','col15','col11','col14','col5','col11','col12']
+    #Mpresley 5/17/25, don't create dummy data of col15
+    dummy_cols = ['col1','col4','col6','col10','col11','col14','col5','col11','col12']
     data = pd.get_dummies(data, columns=dummy_cols)
+    #Mpresley 5/17/25, move col15 to the end to make it y data
+    data['col15'] =  data.pop('col15')
 
 
     # Assuming the last column is the target variable
@@ -269,7 +272,7 @@ def main():
       num_epochs = int(sys.argv[2])
     else:
       num_epochs = 10
-    
+
 
 
     # Prepare data

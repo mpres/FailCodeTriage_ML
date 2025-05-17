@@ -265,21 +265,32 @@ def main():
     #csv_path = "your_data.csv"  # Replace with your CSV file path
     #MPresley 5/16/25 use command line for csv path
     csv_path = sys.argv[1]
+    if len(sys.argv) > 2:
+      num_epochs = int(sys.argv[2])
+    else:
+      num_epochs = 10
+    
+
 
     # Prepare data
     train_loader, test_loader, input_size = prep_data(csv_path)
 
     # Initialize and train model
     model = FailCodeClassifier(input_size)
-    train_model(model, train_loader)
+    #train_model(model, train_loader)
+
 
     # Evaluate model
-    evaluate_model(model, test_loader)
+    #evaluate_model(model, test_loader)
+
+    #Mpresley 5/16/25, using the train_and_eval function
+    train_and_eval_model(model, train_loader, test_loader, num_epochs )
+
 
     # Example of getting probabilities for new data
     new_data = torch.randn(1, input_size)  # Replace with your actual new data
     probabilities = predict_probabilities(model, new_data)
     print("Predicted probabilities for each class:", probabilities)
 
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+    main()

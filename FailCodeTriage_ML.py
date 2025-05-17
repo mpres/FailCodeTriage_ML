@@ -89,6 +89,8 @@ def prep_data(csv_path):
     X = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
 
+    #Mpresley 5/17/25 we can try single encoding the y data before splitting it, to make different categories
+    y = label_encode_and_convert(y)
 
     # Scale features
     #scaler = StandardScaler()
@@ -101,10 +103,12 @@ def prep_data(csv_path):
 
     #Mpresley 4/2/25 Encode data
     X_test =  label_encode_and_convert(X_test)
-    y_test =  label_encode_and_convert(y_test)
+    #Mpresley 5/17/25 y data already encoded
+    #y_test =  label_encode_and_convert(y_test)
 
     X_train =  label_encode_and_convert(X_train)
-    y_train =  label_encode_and_convert(y_train)
+    #Mpresley 5/17/25 y data already encoded
+    #y_train =  label_encode_and_convert(y_train)
 
 
     # Create data loaders
@@ -287,7 +291,7 @@ def main():
     #evaluate_model(model, test_loader)
 
     #Mpresley 5/16/25, using the train_and_eval function
-    train_and_eval_model(model, train_loader, test_loader, num_epochs )
+    train_and_eval_model(model, train_loader, test_loader, num_epochs=num_epochs )
 
 
     # Example of getting probabilities for new data

@@ -262,7 +262,9 @@ def convert_text_to_int(text, map_replace = {},text_replace = {}, filter_nums=1)
 
 def main():
     # Example usage
-    csv_path = "your_data.csv"  # Replace with your CSV file path
+    #csv_path = "your_data.csv"  # Replace with your CSV file path
+    #MPresley 5/16/25 use command line for csv path
+    csv_path = sys.argv[1]
 
     # Prepare data
     train_loader, test_loader, input_size = prep_data(csv_path)

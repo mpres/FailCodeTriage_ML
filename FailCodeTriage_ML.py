@@ -89,6 +89,10 @@ def prep_data(csv_path):
     # Assuming the last column is the target variable
     X = data.iloc[:, :-1].values
     y = data.iloc[:, -1].values
+    
+    #Mpresley 7/9/25
+    y_alpha = y
+    y_dict = {}
 
     #Mpresley 5/17/25 we can try single encoding the y data before splitting it, to make different categories
     y = label_encode_and_convert(y)

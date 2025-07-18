@@ -271,6 +271,7 @@ def convert_text_to_int(text, map_replace = {},text_replace = {}, filter_nums=1)
 
   if filter_nums == 1:
     text = re.sub(r"[a-zA-Z]", "", text)
+    text = text.replace("+","")
 
   # Step 5 try to convert to int
   try:

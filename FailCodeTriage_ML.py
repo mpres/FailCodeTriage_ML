@@ -60,7 +60,8 @@ def prep_data(csv_path):
       print("no col7")
 
     #process the time data
-    data['time_col'] = pd.to_datetime(data['col13']).astype('int64') // 10**9
+    #Mpresley 7/18/25 look for mixed formats
+    data['time_col'] = pd.to_datetime(data['col13'], format='mixed').astype('int64') // 10**9
     scaler = MinMaxScaler()
     data['normalized_sklearn_minmax_time'] = scaler.fit_transform(data[['time_col']])
     data = data.drop(["col13", "time_col"], axis=1)

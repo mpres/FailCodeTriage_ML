@@ -111,6 +111,15 @@ def prep_data(csv_path):
     #Mpresley 5/17/25 y data already encoded
     #y_test =  label_encode_and_convert(y_test)
 
+    #Mpresley look for ints in colum one and clear them out
+    int_indices = np.where([isinstance(x, (int, np.integer)) for x in X_train[:,0]])
+
+    X_train = np.delete(X_train,int_indices,axis=0)
+    #Mpresley 7/9/25 probably will need to delete the same index/indexes from the y_train
+
+    #Mpresley 7/10/25 we need to delete the y label indexs as well
+    y_train = np.delete(y_train,int_indices,axis=0)
+
     X_train =  label_encode_and_convert(X_train)
     #Mpresley 5/17/25 y data already encoded
     #y_train =  label_encode_and_convert(y_train)

@@ -72,7 +72,8 @@ def prep_data(csv_path):
     data = data.drop(["col8","col8_num"], axis=1)
 
     #Process the Model data
-    data['col2_num'] = data['col2'].apply(lambda x: convert_text_to_int(x) )
+    map_dict = {"IPHONEX":10,"IPHONE XR":10.5,"IPHONE XS":10.7,"IPHONE XS MAX":10.9,"IPHONE SE 2ND GEN":11,"IPHONE SE 3RD GEN":11.5}
+    data['col2_num'] = data['col2'].apply(lambda x: convert_text_to_int(x,map_dict) )
     data = data.drop("col2", axis=1)
 
     #Drop the product field
